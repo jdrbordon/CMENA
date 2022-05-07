@@ -1,0 +1,91 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{fancyvrb}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage[spanish]{babel}
+\usepackage{graphicx}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\def\tablename{Tabla}
+
+\title{Manual del código de MATLAB/Octave de Calculo Matricial de Estructuras Articuladas (CMENA)}
+\author{Jacob David Rodr\'iguez Bord\'on \\ Guillermo Manuel \'Alamo Meneses}
+\date{Marzo 2016}
+
+
+\begin{document}
+
+\maketitle
+
+Este código de MATLAB/Octave permite analizar en régimen estático estructuras de barras de nudos articulados bidimensionales, esto es, cálculo de desplazamientos y esfuerzos axiles. La implementación del mismo tiene un objetivo educativo, y no profesional.
+
+Para la definición del modelo se debe escribir un fichero de entrada de texto plano con el siguiente formato:
+\begin{Verbatim}[frame=single,fontsize=\small]
+<número de materiales>
+<identificador> <módulo de elasticidad longitudinal>
+...
+
+<número de secciones>
+<identificador> <área>
+...
+
+<número de nodos>
+<identificador> <x> <y>
+...
+
+<número de elementos>
+<identificador> <id. nodo i> <id. nodo j> <id. sección> <id. material>
+...
+
+<número de apoyos>
+<identificador> <id. nodo> <tipo de apoyo> [valores adicionales]
+...
+
+<número de cargas nodales>
+<identificador> <id. nodo> <Fx> <Fy>
+...
+
+\end{Verbatim}
+donde la selección del tipo de apoyo y los \texttt{[valores adicionales]} están definidos en la Tabla \ref{tab:valores}. Tómense los casos \texttt{ej1.dat} y \texttt{ej2.dat} en la carpeta \texttt{examples/} como ejemplos.
+
+Para realizar el análisis, basta con situar la carpeta de trabajo en la raíz del programa, y luego ejecutar la función \texttt{cmena} con un único argumento de entrada indicando la ruta hacia el fichero de entrada, por ejemplo (ruta al archivo para sistemas Linux):
+\begin{Verbatim}[frame=single,fontsize=\small]
+> modelo_analizado = cmena('examples/ej1.dat');
+\end{Verbatim}
+La función devuelve una variable (una estructura de datos), llamada en este caso \texttt{modelo\_analizado}, que contiene no sólo los datos del modelo sino los resultados del análisis. Una descripción de esta variable puede verse en \texttt{leer\_datos.m}. Además, se generan tres archivos de salida, en este caso de ejemplo: \texttt{ej1.dat.u.txt}, \texttt{ej1.dat.N.txt} y \texttt{ej1.dat.R.txt}; en donde es escriben los resultados de desplazamientos, axiles en barras, y reacciones sobre los apoyos (no las reacciones de los apoyos sobre la estructura).
+
+\begin{table}[h]
+\begin{center}
+\setlength\extrarowheight{2pt}
+\begin{tabular}{c p{6cm} c l}
+\hline
+\textbf{Tipo de} & \textbf{Descripci\'on} & \textbf{Representaci\'on} & \textbf{Valores} \\
+\textbf{apoyo}   &                        & \textbf{gr\'afica} & \textbf{adicionales} \\
+\hline
+1 & Apoyo r\'igido fijo &
+\multicolumn{1}{m{2cm}}{\includegraphics{figures/apoyo_fijo.eps}} &
+\texttt{<b>} \\
+\hline
+2 & Apoyo r\'igido carro horizontal & 
+\multicolumn{1}{m{2cm}}{\includegraphics{figures/apoyo_carro_horizontal.eps}} &
+\texttt{<b>} \\
+\hline
+3 & Apoyo r\'igido carro vertical & 
+\multicolumn{1}{m{2cm}}{\includegraphics{figures/apoyo_carro_vertical.eps}} &
+\texttt{<b>} \\
+\hline
+4 & Apoyo r\'igido carro inclinado & 
+\multicolumn{1}{m{2cm}}{\includegraphics{figures/apoyo_inclinado.eps}} & 
+\texttt{<a>}\\
+\hline
+5 & Apoyo el\'astico & 
+\multicolumn{1}{m{2cm}}{\includegraphics{figures/apoyo_elastico.eps}} & 
+\texttt{<Kx> <Ky> <bx> <by>} \\
+\hline
+\end{tabular}
+\end{center}
+\caption{Tipos de apoyo. Notas: \texttt{<a>} es el \'angulo $\alpha$ de giro de los apoyos inclinados, \texttt{<b>} es el \'angulo $\beta$ usado para girar la representacion gr\'afica mostrada, los \'angulos han de introducirse en grados)}
+\end{table}
+
+\end{document}
+
