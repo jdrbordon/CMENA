@@ -1,4 +1,5 @@
 # CMENA
+Jacob David Rodríguez Bordón, 2022.
 MATLAB/Octave educational program for 2D pin-jointed frames (in Spanish).
 
 Example model:
